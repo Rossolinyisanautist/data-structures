@@ -3,21 +3,25 @@
 using namespace std;
 
 int main() {
-	int n, d, count = 0;
+	int n, d, di, count = 0;
 
 	cin >> n >> d;
 
-	std::vector<char> v;;
-	int max = d;
+	while(n--) {
+		cin >> di;
 
-	for (int i = 0; i < n; ++i) {
-		int temp;
-		cin >> temp;
-		if (temp <= d) {
+		if (di > d) {
+			count++;
+		}
+		else {
 			break;
 		}
-
 	}
 
-	cout << count + 1 << endl;
+	if (n == -1) {
+		cout << "It had never snowed this early!" << endl;
+	}
+	else{
+		cout << "It hadn't snowed this early in " << count << " years!" << endl;
+	}
 }
