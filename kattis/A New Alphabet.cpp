@@ -4,51 +4,119 @@
 using namespace std; 
 
 int main() {
-	map<char, string> map;
-    map['A'] = "@";
-    map['B'] = "8";
-    map['C'] = "(";
-    map['D'] = "|)";
-    map['E'] = "3";
-    map['F'] = "#";
-    map['G'] = "6";
-    map['H'] = "[-]";
-    map['I'] = "|";
-    map['J'] = "_|";
-    map['K'] = "|<";
-    map['L'] = "1";
-    map['M'] = "[]\\/[]";
-    map['N'] = "[]\\[]";
-    map['O'] = "0";
-    map['P'] = "|D";
-    map['Q'] = "(,)";
-    map['R'] = "|Z";
-    map['S'] = "$";
-    map['T'] = "']['";
-    map['U'] = "|_|";
-    map['V'] = "\\/";
-    map['W'] = "\\/\\/";
-    map['X'] = "}{";
-    map['Y'] = "`/";
-    map['Z'] = "2";
-
-    string inputString;
-    getline(cin, inputString);
-
-    cout << inputString.length();
-
-    for (int i = 0; i < inputString.length(); ++i) {
-    	char c = inputString.at(i);
-
-    	if('a' <= c && c <= 'z') {
-    		cout << map[(char)toupper(c)];
-    	}
-    	else if ('A' <= c && c <= 'Z') {
-    		cout << map[c];
-    	}
-    	else {
-    		cout << c;
-    	}
+    char c;
+    while(cin >> noskipws >> c) {
+        switch(c) {
+        case 'a':
+        case 'A':
+            cout << "@";
+            break;
+        case 'b':
+        case 'B':
+            cout << "8";
+            break;
+        case 'c':
+        case 'C':
+            cout << "(";
+            break;
+        case 'd':
+        case 'D':
+            cout << "|)";
+            break;
+        case 'e':
+        case 'E':
+            cout << "3";
+            break;
+        case 'f':
+        case 'F':
+            cout << "#";
+            break;
+        case 'g':
+        case 'G':
+            cout << "6";
+            break;
+        case 'h':
+        case 'H':
+            cout << "[-]";
+            break;
+        case 'i':
+        case 'I':
+            cout << "|";
+            break;
+        case 'j':
+        case 'J':
+            cout << "_|";
+            break;
+        case 'k':
+        case 'K':
+            cout << "|<";
+            break;
+        case 'l':
+        case 'L':
+            cout << "1";
+            break;
+        case 'm':
+        case 'M':
+            cout << "[]\\/[]";
+            break;
+        case 'n':
+        case 'N':
+            cout << "[]\\[]";
+            break;
+        case 'o':
+        case 'O':
+            cout << "0";
+            break;
+        case 'p':
+        case 'P':
+            cout << "|D";
+            break;
+        case 'q':
+        case 'Q':
+            cout << "(,)";
+            break;
+        case 'r':
+        case 'R':
+            cout << "|Z";
+            break;
+        case 's':
+        case 'S':
+            cout << "$";
+            break;
+        case 't':
+        case 'T':
+            cout << "']['";
+            break;
+        case 'u':
+        case 'U':
+            cout << "|_|";
+            break;
+        case 'v':
+        case 'V':
+            cout << "\\/";
+            break;
+        case 'w':
+        case 'W':
+            cout << "\\/\\/";
+            break;
+        case 'x':
+        case 'X':
+            cout << "}{";
+            break;
+        case 'y':
+        case 'Y':
+            cout << "`/";
+            break;
+        case 'z':
+        case 'Z':
+            cout << "2";
+            break;
+        default:
+            cout << c;
+        }
     }
     cout << endl;
 }
+
+
+

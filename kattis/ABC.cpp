@@ -11,15 +11,21 @@ int main() {
 	if (b > c) swap(b, c);
 	if (a > b) swap(a, b);
 
-	string order;
-
-	cin >> order;
-
-	if (order == "ABC") cout << a << " " << b << " " << c << endl;
-	if (order == "CBA")	cout << c << " " << b << " " << a << endl;
-	if (order == "ACB")	cout << a << " " << c << " " << b << endl;
-	if (order == "CAB")	cout << c << " " << a << " " << b << endl;
-	if (order == "BAC")	cout << b << " " << a << " " << c << endl;
-	if (order == "BCA") cout << b << " " << c << " " << a << endl;
-
+	for (int i = 0; i < 3; ++i) {
+		char ch;
+		cin >> ch;
+		switch(ch) {
+			case 'A': 
+				cout << a;
+				break;
+			case 'B': 
+				cout << b;
+				break;
+			case 'C': 
+				cout << c;
+				break;
+		}
+		cout << " ";
+	}
+	cout << endl;
 }
