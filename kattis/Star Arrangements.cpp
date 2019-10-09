@@ -1,55 +1,68 @@
 #include<iostream>
-#include<vector>
 
 using namespace std;
 
 int main() {
-	int n;
-	cin >> n;
-	vector<string> output;
+    int n;
+    cin >> n;
+    cout << n << ":" << '\n';
+    int sum;
 
-	int sum;
 
-	int i = ( n % 2 == 0) ? (n / 2) : (n / 2 + 1), 
-		j = n / 2, 
-		timesI = 1, 
-		timesJ = 1;
+    int i = 1, 
+        j = 1, 
+        timesI = n / 2 + 1, 
+        timesJ = n / 2;
 
-	while(i > 1) {
-		sum = i * timesI + j * timesJ;
+    while(i > 1) {
+        sum = i * timesI + j * timesJ;
 
-		if (sum == n) {
-			output.push_back(to_string(i) + "," + to_string(j));
-			timesI = 1;
-			timesJ = 1;
-			if (j == i) {
-				j--;
-			}
-			else if(i > j) {
-				i--;
-			}
-		}
+        if (sum == n) {
+        	cout << i << ',' << j << '\n';
+            timesI = n / 2 + 1;
+            timesJ = n / 2;
+            if (j == i) {
+                i++;
+            }
+            else if(i > j) {
+                j++;
+            }
+        }
 
-		if (sum > n) {
-			if (j == i) {
-				j--;
-			}
-			else if(i > j) {
-				i--;
-			}
-		}
-		if (sum < n) {
-			if (timesI == timesJ) {
-				timesI++;
-			}
-			else if(timesI > timesJ) {
-				timesJ++;
-			}
-		}
-	}
-	cout << n << ":" << endl;
-	for (auto i = output.rbegin(); i != output.rend(); ++i)	{
-		cout << *i << endl;
-	}
-
+        if (sum < n) {
+            if (j == i) {
+                i++;
+            }
+            else if(i > j) {
+                j++;
+            }
+        }
+        if (sum > n) {
+            if (timesI == timesJ) {
+                timesJ--;
+            }
+            else if(timesI > timesJ) {
+                timesI--;
+            }
+        }
+    }
+    
 }
+
+/*
+
+2 1
+
+
+3
+
+* 
+*
+
+* *
+*
+
+* *
+ *
+
+*/
