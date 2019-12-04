@@ -8,6 +8,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <random>
+#include <chrono>
 
 const int defSize = 4;
 const int minSize = 3;
@@ -29,7 +31,9 @@ int main(int argc, char* argv[])
 
     vector<string> numbers = fillNumbers(n);
     
-    random_shuffle(begin(numbers), end(numbers));
+    mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+    shuffle(begin(numbers), end(numbers), rnd);
+
     string compNumber = numbers.front();
     
     showHelp(n);

@@ -1,4 +1,5 @@
 #include<iostream>
+#include<vector>
 
 using namespace std;
 
@@ -6,24 +7,22 @@ int main() {
 	int r, c, zr, zc;
 	cin >> r >> c >> zr >> zc;
 
-	char m[r][c];
+	vector<string> lines;
 
 	for (int i = 0; i < r; ++i) {
-		for (int j = 0; j < c; ++j) {
-			cin >> m[i][j];
-		}
+		string temp;
+		cin >> temp;
+		lines.push_back(temp);
 	}
-	string s;
+	
+	string lineToPrint = "";
 	for (int i = 0; i < r; ++i) {
-		for (int j = 0; j < c; ++j) {
-			for(int k = 0; k < zc; k++) {
-				s += m[i][j];	
-			}
+		for(int j = 0; j < lines[i].length(); j++) {
+			lineToPrint.insert(lineToPrint.length(), zc, lines[i][j]);
 		}
-
-		for(int k = 0; k < zr; k++) {
-			cout << s << '\n';
+		for(int j = 0; j < zr; j++) {
+			cout << lineToPrint << '\n';
 		}
-		s = "";
+		lineToPrint = "";
 	}
 }
