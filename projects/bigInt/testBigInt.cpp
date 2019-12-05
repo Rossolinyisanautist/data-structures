@@ -12,7 +12,7 @@ TEST_CASE("Constructors", "[ctors]") {
 }
 
 TEST_CASE("operator<<") {
-	ostringstream out;
+	std::ostringstream out;
 	out << BigInt();
 	REQUIRE(out.str() == "0");
 }
