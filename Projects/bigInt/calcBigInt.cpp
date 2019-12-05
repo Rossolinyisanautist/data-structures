@@ -9,11 +9,11 @@ int main() {
 	BigInt b;
 
 	cin >> a;
-	b = 200;
 
-	BigInt c = a + b;
-	cout << a << " + " << b << " = " << c << '\n';
-	// cout << c << '\n';
-
-
+	cout << ++a << '\n';
+	cout << a++ << '\n';
+	cout << a << '\n';
+	// while(cin >> a >> b) {
+		// cout << a << " - " << b << " = " <<  (a - b) << '\n';	
+	// }
 }

@@ -103,29 +103,25 @@ TEST_CASE("Check + operator", "[addition]") {
     {
         b1 = 12341234;
         b2 = 87654321;
-        bool succ = b1 + b2 == BigInt("99995555");
-        REQUIRE(succ);
+        REQUIRE(b1 + b2 == BigInt("99995555"));
     }
     SECTION("Case 2")
     {
         b1 = 1;
         b2 = BigInt("999999999999999999999999999999");
-        bool succ = b1 + b2 == BigInt("1000000000000000000000000000000");
-        REQUIRE(succ);
+        REQUIRE(b1 + b2 == BigInt("1000000000000000000000000000000"));
     }
     SECTION("Case 3")
     {
         b1 = BigInt();
         b2 = BigInt("999999999999999999999999999999");
-        bool succ = b1 + b2 == b2;
-        REQUIRE(succ);
+        REQUIRE(b1 + b2 == b2);
     }
     SECTION("Case 4")
     {
         b1 = BigInt("123456789");
         b2 = BigInt("123456789");
-        bool succ = b1 + b2 == BigInt("246913578");
-        REQUIRE(succ);
+        REQUIRE(b1 + b2 == BigInt("246913578"));
     }
 }
 
@@ -180,5 +176,184 @@ TEST_CASE("Check > operator", "[greater than]") {
         b1 = BigInt("1234567891234567891234567892134567890");
         b2 = BigInt("123456789123456789123456789213456780");
         REQUIRE(b1 > b2);
+    }
+}
+
+TEST_CASE("Check negation(-) operator", "[negation]") { 
+	BigInt b1, b2;
+
+	SECTION("Case 1")
+    {
+        b1 = BigInt("123456789");
+        b2 = BigInt("-123456789");
+        REQUIRE(-b1 == b2);
+    }
+    SECTION("Case 2")
+    {
+        b1 = -BigInt("-123456789");
+        b2 = -BigInt("123456789");
+        REQUIRE(b1 == -b2);
+    }
+    SECTION("Case 3")
+    {
+        b1 = -BigInt("123456789");
+        b2 = BigInt("123456789");
+        REQUIRE(-b1 == b2);
+    }
+}
+
+TEST_CASE("Check - operator", "[subtraction]") { 
+	BigInt b1, b2;
+	
+	SECTION("Case 1")
+    {
+        b1 = BigInt("123456789123456789123456789");
+        b2 = BigInt("123456789123456789123456789");
+        REQUIRE(b1 - b2 == 0);
+    }
+    SECTION("Case 2")
+    {
+        b1 = BigInt("-1000000000000");
+        b2 = BigInt("-1000000000000");
+        REQUIRE(b1 - b2 == 0);
+    }
+    SECTION("Case 3")
+    {
+        b1 = BigInt("1000000000000");
+        b2 = BigInt("-1000000000000");
+        REQUIRE(b1 - b2 == BigInt("2000000000000"));
+    }
+    SECTION("Case 4")
+    {
+        b1 = BigInt("-1000000000000");
+        b2 = BigInt("1000000000000");
+        REQUIRE(b1 - b2 == BigInt("-2000000000000"));
+    }
+    SECTION("Case 5")
+    {
+        b1 = BigInt("-235689");
+        b2 = BigInt("-124578");
+        REQUIRE(b1 - b2 == BigInt("-111111"));
+    }
+    SECTION("Case 6")
+    {
+        b1 = BigInt("-2000");
+        b2 = BigInt("-1000");
+        REQUIRE(b1 - b2 == BigInt("-1000"));
+    }
+    SECTION("Case 7")
+    {
+        b1 = BigInt("1000000000000000000000000000000");
+        b2 = BigInt("1");
+        REQUIRE(b1 - b2 == BigInt("999999999999999999999999999999"));
+    }
+	SECTION("Case 7")
+    {
+        b1 = BigInt("1000000000000000000000000000000");
+        b2 = BigInt("999999999999999999999999999999");
+        REQUIRE(b1 - b2 == BigInt("1"));
+    }
+}
+
+TEST_CASE("Check -= operator", "[minus-equals]") { 
+	BigInt b1, b2;
+	
+	SECTION("Case 1")
+    {
+        b1 = BigInt("123456789123456789123456789");
+        b2 = BigInt("123456789123456789123456789");
+        b1 -= b2;
+        REQUIRE(b1 == 0);
+    }
+    SECTION("Case 2")
+    {
+        b1 = BigInt("-1000000000000");
+        b2 = BigInt("-1000000000000");
+        b1 -= b2;
+        REQUIRE(b1 == 0);
+    }
+    SECTION("Case 3")
+    {
+        b1 = BigInt("1000000000000");
+        b2 = BigInt("-1000000000000");
+        b1 -= b2;
+        REQUIRE(b1 == BigInt("2000000000000"));
+    }
+    SECTION("Case 4")
+    {
+        b1 = BigInt("-1000000000000");
+        b2 = BigInt("1000000000000");
+        b1 -= b2;
+        REQUIRE(b1 == BigInt("-2000000000000"));
+    }
+    SECTION("Case 5")
+    {
+        b1 = BigInt("-235689");
+        b2 = BigInt("-124578");
+        b1 -= b2;
+        REQUIRE(b1 == BigInt("-111111"));
+    }
+    SECTION("Case 6")
+    {
+        b1 = BigInt("-515984");
+        b2 = BigInt("-235689");
+        b1 -= b2;
+        REQUIRE(b1 == BigInt("-280295"));
+    }
+    SECTION("Case 7")
+    {
+        b1 = BigInt("1000000000000000000000000000000");
+        b2 = BigInt("1");
+        b1 -= b2;
+        REQUIRE(b1 == BigInt("999999999999999999999999999999"));
+    }
+	SECTION("Case 7")
+    {
+        b1 = BigInt("1000000000000000000000000000000");
+        b2 = BigInt("999999999999999999999999999999");
+        b1 -= b2;
+        REQUIRE(b1 == BigInt("1"));
+    }
+}
+
+TEST_CASE("Check -- operator", "[decrement]") { 
+	BigInt b1, b2;
+	
+	SECTION("Case 1")
+    {
+        b1 = BigInt("1000");
+        REQUIRE(--b1 == 999);
+    }
+    SECTION("Case 2")
+    {
+        b1 = BigInt("1000");
+        REQUIRE(b1-- == 1000);
+    }
+    SECTION("Case 3")
+    {
+        b1 = BigInt("-1000");
+        b1--;
+        REQUIRE(b1 == -1001);
+    }
+}
+
+TEST_CASE("Check ++ operator", "[increment]") { 
+	BigInt b1, b2;
+	
+	SECTION("Case 1")
+    {
+        b1 = BigInt("1000");
+        REQUIRE(++b1 == 1001);
+    }
+    SECTION("Case 2")
+    {
+        b1 = BigInt("1000");
+        REQUIRE(b1++ == 1000);
+    }
+    SECTION("Case 3")
+    {
+        b1 = BigInt("-1000");
+        b1++;
+        REQUIRE(b1 == -999);
     }
 }
