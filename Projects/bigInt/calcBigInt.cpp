@@ -8,9 +8,12 @@ int main() {
 	BigInt a;
 	BigInt b;
 
-	cin >> a >> b;
+	cin >> a;
+	b = 200;
 
-	cout << a << '\n' << b << '\n';
+	BigInt c = a + b;
+	cout << a << " + " << b << " = " << c << '\n';
+	// cout << c << '\n';
 
 
 }

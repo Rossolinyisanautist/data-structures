@@ -6,9 +6,9 @@
 
 using namespace std;
 
-BigInt::BigInt(const std::string& s) {
+BigInt::BigInt(const std::string& s) : isNegative(false) {
 	int i = 0;
-
+	
 	while( i < s.size() && isspace(s[i]) ) {
 		i++;
 	}
@@ -30,7 +30,6 @@ BigInt::BigInt(const std::string& s) {
 	while( mDigits[0] == 0 && mDigits.size() > 1 ) {
 		mDigits.erase(mDigits.begin());
 	}
-
 }
 
 BigInt::BigInt(const int64_t n) {
