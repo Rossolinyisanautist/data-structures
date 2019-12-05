@@ -41,7 +41,7 @@ bool parseExpr(const string& line, Rational& r1, char& op, Rational& r2) {
 	if( !(sinp >> r1) ) {
 		return false;
 	}
-	if( !(sinp >> op) || operations.find(op) == string::npos ) {
+	if( !(sinp >> op) || operations.find(op) == string:npos ) {
 		return false;
 	}
 	
