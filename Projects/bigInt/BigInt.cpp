@@ -6,7 +6,7 @@
 
 using namespace std;
 
-BigInt::BigInt(const std::string& s) : isNegative(false) {
+BigInt::BigInt(const std::string& s) : isNeg(false) {
 	int i = 0;
 	
 	while( i < s.size() && isspace(s[i]) ) {
@@ -14,7 +14,7 @@ BigInt::BigInt(const std::string& s) : isNegative(false) {
 	}
 
 	if( s[i] == '-' || s[i] == '+' ) {
-		isNegative = s[i] == '-';
+		isNeg = s[i] == '-';
 		i++;
 	}
 	
@@ -27,6 +27,14 @@ BigInt::BigInt(const std::string& s) : isNegative(false) {
 		throw runtime_error("Incorrect Representation of BigInt: " + s);
 	}
 
+	while( mDigits[0] == 0 && mDigits.size() > 1 ) {
+		mDigits.erase(mDigits.begin());
+	}
+}
+
+BigInt::BigInt(const std::vector<int>& s) : isNeg(false) {
+	// dangerous of object s is destroyed
+	mDigits = s;
 	while( mDigits[0] == 0 && mDigits.size() > 1 ) {
 		mDigits.erase(mDigits.begin());
 	}
@@ -77,7 +85,7 @@ BigInt BigInt::operator--(int) {
 string BigInt::toString() const {
 	string r;
 
-	if(isNegative) {
+	if(isNeg) {
 		r += "-";
 	}
 
