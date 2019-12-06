@@ -8,7 +8,12 @@ int main() {
 	BigInt a;
 	BigInt b;
 
-	while(cin >> a >> b) {
-		cout << a << " - " << b << " = " <<  (a - b) << '\n';	
-	}
+	cin >> a >> b;
+
+
+	cout << "\n\n\n" << a + b << '\n';
+
+	// while(cin >> a >> b) {
+	// 	cout << a << " - " << b << " = " <<  (a - b) << '\n';	
+	// }
 }
