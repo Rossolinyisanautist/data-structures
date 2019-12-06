@@ -93,7 +93,6 @@ TEST_CASE("Check >> operator", "[input]")
             REQUIRE_THROWS_AS(sinp >> b, runtime_error);
         }
     }
-
 }
 
 TEST_CASE("Check + operator", "[addition]") { 
@@ -123,6 +122,43 @@ TEST_CASE("Check + operator", "[addition]") {
         b2 = BigInt("123456789");
         REQUIRE(b1 + b2 == BigInt("246913578"));
     }
+    SECTION("Case 5")
+    {
+        b1 = BigInt("10000000000000000");
+        b2 = BigInt("20000000000000000");
+        REQUIRE(b1 + b2 == BigInt("30000000000000000"));
+    }
+    SECTION("Case 6")
+    {
+        b1 = BigInt("-10000000000000000");
+        b2 = BigInt("-20000000000000000");
+        REQUIRE(b1 + b2 == BigInt("-30000000000000000"));
+    }
+    SECTION("Case 7")
+    {
+        b1 = BigInt("-20000000000000000");
+        b2 = BigInt("10000000000000000");
+        REQUIRE(b1 + b2 == BigInt("-10000000000000000"));
+    }
+    SECTION("Case 8")
+    {
+        b1 = BigInt("-10000000000000000");
+        b2 = BigInt("20000000000000000");
+        REQUIRE(b1 + b2 == BigInt("10000000000000000"));
+    }
+    SECTION("Case 9")
+    {
+        b1 = BigInt("20000000000000000");
+        b2 = BigInt("-10000000000000000");
+        REQUIRE(b1 + b2 == BigInt("10000000000000000"));
+    }
+    SECTION("Case 10")
+    {
+        b1 = BigInt("10000000000000000");
+        b2 = BigInt("-20000000000000000");
+        REQUIRE(b1 + b2 == BigInt("-10000000000000000"));
+    }
+
 }
 
 TEST_CASE("Check > operator", "[greater than]") {
