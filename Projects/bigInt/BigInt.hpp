@@ -189,7 +189,6 @@ inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 
 	if(a.size() < b.size()) swap(a, b);
 
-
 	for(int i = a.size() - 1; i >= 0 ; i--) {
 		std::vector<int> tempRes(len, 0);
 
