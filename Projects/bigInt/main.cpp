@@ -357,22 +357,26 @@ string BigInt::toString() const {
 
 
 
+BigInt factorial(int n) {
+	if(n == 0) {
+		return BigInt(1);
+	}
+	return factorial(n - 1) * n;
+}
+
+
 
 
 
 int main() {
-	BigInt two = BigInt("2"), 
-		   res = BigInt("2"),
-		   pow;
+	BigInt a;
+	BigInt b;
+	int n ;
+	cin >> a >> b;
 
-	cin >> pow;
 
-	// cout << two << " in power of " << pow << '\n';
+	cout << a * b << '\n';
 
-	for (int i = 0; i < pow - 1; ++i) {
-		res = res * two;
-	}
-	cout << res << '\n';
 	// while(cin >> a >> b) {
 	// 	cout << a << " - " << b << " = " <<  (a - b) << '\n';	
 	// }

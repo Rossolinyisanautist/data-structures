@@ -174,6 +174,8 @@ inline BigInt operator-=(BigInt& b1, const BigInt& b2) {
 
 
 inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
+	// TODO: Improve efficiency, too slow.
+	
 	if(b1 == 0 || b2 == 0) return BigInt("0");
 
 	bool isNegative = false;
