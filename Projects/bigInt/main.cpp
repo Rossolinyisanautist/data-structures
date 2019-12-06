@@ -1,17 +1,17 @@
 
+
 #include<vector>
 #include<algorithm>
 #include<iostream>
 #include<string>
 #include<cctype>
 
-using namespace std;
+using namespace std; 
 
 class BigInt {
 
 	std::vector<int> mDigits;
 	bool isNegative;
-
 
 public:
 	BigInt() : isNegative(false) {
@@ -25,7 +25,6 @@ public:
 	BigInt operator++(int);	
 	BigInt operator--();
 	BigInt operator--(int);
-
 
 	std::string toString() const;
 };
@@ -81,38 +80,8 @@ inline bool operator!=(const BigInt& b1, const BigInt& b2) {
     return !(b1 == b2);
 }
 
-inline BigInt operator+(const BigInt& b1, const BigInt& b2) {
-	std::string a = b1.toString();
-	std::string b = b2.toString();
-	std::string res;
-
-	if(a.length() < b.length()) swap(a, b);
-    reverse(a.begin(), a.end());
-    reverse(b.begin(), b.end());
-
-    int buff = 0;
-    for(int i = 0; i < a.length(); i++) {
-    	if( i >= b.length() ) {
-    		b += "0";
-    	}
-    	int newDigit = (a[i] - '0') + (b[i] - '0') + buff;
-		res += std::to_string(newDigit % 10);
-		buff = newDigit / 10;
-    }
-    if(buff == 1) {
-    	res += '1';
-    }
-    reverse(res.begin(), res.end());
-	
-    return BigInt(res);
-}
-
-inline BigInt operator+=(BigInt& b1, const BigInt& b2) {
-	b1 = b1 + b2;
-	return b1;
-}
-
 inline BigInt operator-(const BigInt& b1) {
+	// negation
 	std::string str = b1.toString();
 	bool isNegative = str[0] == '-';
 
@@ -126,90 +95,79 @@ inline BigInt operator-(const BigInt& b1) {
 	return BigInt(str);
 }
 
-inline BigInt operator-(const BigInt& b1, const BigInt& b2) {
-	
+inline BigInt operator+(const BigInt& b1) {
+	return b1;
+}
+
+inline BigInt operator+(const BigInt& b1, const BigInt& b2) {
+	std::string res, 
+				a = b1.toString(),
+				b = b2.toString();
+
+	int buff = 0;
+	bool isNegative = false,
+		 negAddition = false;
+
 	if(b1 < 0 && b2 >= 0) {
-		return -((-b1) + b2);
+		isNegative = (-b1) > b2;
+	 	negAddition = true;
+	 	a.erase(a.begin());
 	}
 	else if(b2 < 0 && b1 >= 0) {
-		return b1 + (-b2);
+		isNegative = (-b2) > b1;
+		negAddition = true;
+		b.erase(b.begin());
 	}
-	else {
-		std::string a = b1.toString();
-		std::string b = b2.toString();
-		std::string res;
-		bool isNegative = b1 < b2;
-		if(a[0] == '-' && b[0] == '-') {
-			a.erase(a.begin());
-			b.erase(b.begin());
-		} 
+	else if(b1 < 0 && b2 < 0) {
+		isNegative = true;
+	 	a.erase(a.begin());
+		b.erase(b.begin());		
+	}
 
-		if(BigInt(a) < BigInt(b)) swap(a, b); // CHECK (b1 < b2)
+	if(BigInt(a) < BigInt(b)) swap(a, b);
 
-	    reverse(a.begin(), a.end());
-	    reverse(b.begin(), b.end());
+    reverse(a.begin(), a.end());
+    reverse(b.begin(), b.end());
 
-		int buff = 0;
-		for(int i = 0; i < a.length(); i++) {
-
-			int newDigit;
-			if(i >= b.length()) {
-				newDigit = (a[i] - '0') - buff;
-			}
-			else {
-				newDigit = (a[i] - '0') - (b[i] - '0') - buff;
-			}
+    for(int i = 0; i < a.length(); i++) {
+    	int newDigit;
+    	if( i >= b.length() ) {
+    		b += "0";
+    	}
+    	if(negAddition) {
+			newDigit = (a[i] - '0') - (b[i] - '0') - buff;
 			
-			if(newDigit < 0) {
-				newDigit += 10;
-				buff = 1;
-			}
-			else {	
-				buff = 0;
-			}
-			res += std::to_string(newDigit);
+			buff = newDigit < 0 ? 1 : 0;
+			newDigit += newDigit < 0 ? 10 : 0;
+    	}
+    	else {
+	    	newDigit = (a[i] - '0') + (b[i] - '0') + buff;
+			buff = newDigit / 10;
+			newDigit %= 10;
 		}
-		if(isNegative) res += '-';
-		reverse(res.begin(), res.end());
-		return BigInt(res);
-	}
+		res += std::to_string(newDigit);
+    }
+    if( !negAddition && buff == 1 ) {
+    	res += '1';
+    }
+	if(isNegative) res += '-';
+	reverse(res.begin(), res.end());
+	return BigInt(res);
+}
+
+inline BigInt operator+=(BigInt& b1, const BigInt& b2) {
+	b1 = b1 + b2;
+	return b1;
+}
+
+inline BigInt operator-(const BigInt& b1, const BigInt& b2) {
+	return b1 + (-b2);
 }
 
 inline BigInt operator-=(BigInt& b1, const BigInt& b2) {
 	b1 = b1 - b2;
 	return b1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -250,7 +208,7 @@ BigInt::BigInt(const std::string& s) : isNegative(false) {
 	}
 
 	if( i != s.size() ) {
-		throw runtime_error("Incorrect Representation of BigInt");
+		throw runtime_error("Incorrect Representation of BigInt: " + s);
 	}
 
 	while( mDigits[0] == 0 && mDigits.size() > 1 ) {
@@ -301,7 +259,6 @@ BigInt BigInt::operator--(int) {
 }
 
 
-
 string BigInt::toString() const {
 	string r;
 
@@ -328,15 +285,11 @@ string BigInt::toString() const {
 
 
 
-
-
-
 int main() {
 	BigInt a;
 	BigInt b;
-
 	cin >> a >> b;
-	cout << a - b << '\n';
+	cout << a + b;
 	// while(cin >> a >> b) {
 		// cout << a << " - " << b << " = " <<  (a - b) << '\n';	
 	// }

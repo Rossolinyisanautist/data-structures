@@ -75,7 +75,6 @@ BigInt BigInt::operator--(int) {
 }
 
 
-
 string BigInt::toString() const {
 	string r;
 
