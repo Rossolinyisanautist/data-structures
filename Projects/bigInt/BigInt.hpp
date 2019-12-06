@@ -185,7 +185,7 @@ inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 					 b = b2.getDigits();
 
 	int len = std::min(a.size(), b.size());
-	int buff = 0, insertTimes = 0;
+	int insertTimes = 0;
 
 	if(a.size() < b.size()) swap(a, b);
 
@@ -194,6 +194,7 @@ inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 		std::vector<int> tempRes(len, 0);
 
 		int k = len - 1;
+		int buff = 0;
 		for(int j = b.size() - 1; j >= 0; j--) {
 
 			int newDigit = a[i] * b[j] + buff;
@@ -204,7 +205,6 @@ inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 
 		if(buff) {
 			tempRes.insert(tempRes.begin(), buff); 
-			buff = 0;
 		}
 
 		tempRes.insert(tempRes.end(), insertTimes++, 0);
