@@ -1,10 +1,13 @@
 
+// TODO:
+// make 2 diffirent func to add and subtract. funcs must accept vectors and return vector;
+// use those func in division and multiplication.
+
 #include<vector>
 #include<algorithm>
 #include<iostream>
 #include<string>
 #include<cctype>
-
 
 using namespace std;
 
@@ -15,8 +18,8 @@ private:
 	mutable bool isNeg;
 
 	void eraseLeadingZeroes();
-	void negate() const {
-		isNeg = !isNeg;
+	void setNeg(bool val) const {
+		isNeg = val;
 	}
 	
 	friend BigInt operator-(const BigInt& b1);
@@ -29,12 +32,12 @@ public:
 	BigInt(const std::string& s);
 	BigInt(const int64_t n);
 	BigInt(const BigInt& b1);
-	BigInt(const std::vector<int>& s);
+	BigInt(const std::vector<int> v);
 	BigInt operator++();
 	BigInt operator++(int);	
 	BigInt operator--();
 	BigInt operator--(int);
-	BigInt abs(const BigInt& b1);
+	std::string toString() const;
 	
 	std::vector<int> getDigits() const {
 		return mDigits;
@@ -42,8 +45,6 @@ public:
 	bool isNegative() const {
 		return isNeg;
 	}
-
-	std::string toString() const;
 
 };
 
@@ -103,9 +104,10 @@ inline bool operator!=(const BigInt& b1, const BigInt& b2) {
 
 inline BigInt operator-(const BigInt& b1) {
 	// negation
-	b1.negate();
+	BigInt temp = BigInt(b1);
+	temp.setNeg(!b1.isNegative());
 
-	return b1;
+	return temp;
 }
 
 inline BigInt abs(const BigInt& b1) {
@@ -185,6 +187,22 @@ inline BigInt operator-=(BigInt& b1, const BigInt& b2) {
 	return b1;
 }
 
+inline BigInt multSmall(const BigInt& b1, long long b2) {
+
+	bool isNegative = b1.isNegative() ^ (b2 < 0);
+	std::vector<int> a = b1.getDigits();
+	BigInt res;
+	b2 = abs(b2);
+
+	int i = 0;
+	for (; i < a.size(); i++) {
+		std::string tempRes = std::to_string(a[i] * b2);
+		tempRes.insert(tempRes.end(), a.size() - 1 - i, '0');
+		res += tempRes;
+	}
+	return isNegative ? -res : res;
+}
+
 inline std::vector<int> addVectors(std::vector<int> a, std::vector<int> b) {
 	if(a.size() < b.size()) swap(a, b);
 	std::vector<int> res(a.size() + 1, 0); // calculate len more precisely
@@ -214,6 +232,12 @@ inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 	// TODO: Improve efficiency, too slow.
 
 	if(b1 == 0 || b2 == 0) return 0;
+	if(abs(b2) < std::numeric_limits<long long>::max() / 10) {
+		return multSmall(b1, std::stoll(b2.toString()));
+	}
+	if(abs(b1) < std::numeric_limits<long long>::max() / 10) {
+		return multSmall(b2, std::stoll(b1.toString()));	
+	}
 
 	bool isNegative = b1.isNegative() ^ b2.isNegative();
 	std::vector<int> a = b1.getDigits(),
@@ -246,4 +270,9 @@ inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 	BigInt result(resVector);
 	return isNegative ? -result : result;
 }
+
+
+
+
+
 

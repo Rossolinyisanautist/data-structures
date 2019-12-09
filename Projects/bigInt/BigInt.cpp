@@ -31,9 +31,9 @@ BigInt::BigInt(const std::string& s) : isNeg(false) {
 	eraseLeadingZeroes();
 }
 
-BigInt::BigInt(const std::vector<int>& s) : isNeg(false) {
+BigInt::BigInt(const std::vector<int> v) : isNeg(false) {
 	// dangerous if object s is destroyed
-	mDigits = s;
+	mDigits = v;
 	eraseLeadingZeroes();
 }
 
@@ -95,6 +95,9 @@ string BigInt::toString() const {
 
 	for(auto d : mDigits) {
 		r += char(d + '0');
+	}
+	if(r == "-0") {
+		isNeg = false;
 	}
 
 	return r == "-0" ? "0" : r ;
