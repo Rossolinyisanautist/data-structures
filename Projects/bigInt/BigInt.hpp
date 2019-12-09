@@ -1,14 +1,25 @@
-#pragma once
+
 #include<vector>
 #include<algorithm>
 #include<iostream>
 #include<string>
 #include<cctype>
 
+
+using namespace std;
+
 class BigInt {
 
+private:
 	std::vector<int> mDigits;
-	bool isNeg;
+	mutable bool isNeg;
+
+	void eraseLeadingZeroes();
+	void negate() const {
+		isNeg = !isNeg;
+	}
+	
+	friend BigInt operator-(const BigInt& b1);
 
 public:
 	BigInt() : isNeg(false) {
@@ -23,6 +34,8 @@ public:
 	BigInt operator++(int);	
 	BigInt operator--();
 	BigInt operator--(int);
+	BigInt abs(const BigInt& b1);
+	
 	std::vector<int> getDigits() const {
 		return mDigits;
 	}
@@ -31,31 +44,30 @@ public:
 	}
 
 	std::string toString() const;
+
 };
 
 inline std::ostream& operator<<(std::ostream& out, const BigInt& b) {
 	return out << b.toString();
 }
 
+
 std::istream& operator>>(std::istream& inp, BigInt& b);
 
 inline bool operator>(const BigInt& b1, const BigInt& b2) {
 	// May be use subtraction
-	bool negativeComparison = false;
+	
 	std::vector<int> a = b1.getDigits(),
 					 b = b2.getDigits();
-	
-	if(b1.isNegative() && b2.isNegative()) {
-		negativeComparison = true;
-		a.erase(a.begin());
-		b.erase(b.begin());
-	} 
-	else if(b1.isNegative()) {
+
+	if(b1.isNegative() && !b2.isNegative()) {
 		return false;
 	}
-	else if(b2.isNegative()) {
+	else if( !b1.isNegative() && b2.isNegative()) {
 		return true;
 	}
+
+	bool negativeComparison = b1.isNegative() && b2.isNegative();
 
 	if(a.size() != b.size()) {
 		return negativeComparison 
@@ -91,16 +103,13 @@ inline bool operator!=(const BigInt& b1, const BigInt& b2) {
 
 inline BigInt operator-(const BigInt& b1) {
 	// negation
-	std::string str = b1.toString();
+	b1.negate();
 
-	if(b1.isNegative()) {
-		str[0] = '0';
-	}
-	else {
-		str = '-' + str;
-	}
+	return b1;
+}
 
-	return BigInt(str);
+inline BigInt abs(const BigInt& b1) {
+	return b1.isNegative() ? -b1 : b1;
 }
 
 inline BigInt operator+(const BigInt& b1) {
@@ -108,29 +117,29 @@ inline BigInt operator+(const BigInt& b1) {
 }
 
 inline BigInt operator+(const BigInt& b1, const BigInt& b2) {
-	std::vector<int> res, 
-					 a = b1.getDigits(),
+	std::vector<int> a = b1.getDigits(),
 					 b = b2.getDigits();
 
 	int buff = 0;
 	bool isNegative = false,
 		 negAddition = false;
 
-	if(b1 < 0 && b2 >= 0) {
+		 // Find sign of resulting number
+	if(b1.isNegative() && !b2.isNegative()) {
 		isNegative = (-b1) > b2;
 	 	negAddition = true;
 	}
-	else if(b2 < 0 && b1 >= 0) {
+	else if( !b1.isNegative() && b2.isNegative()) {
 		isNegative = (-b2) > b1;
 		negAddition = true;
 	}
-	else if(b1 < 0 && b2 < 0) {
+	else if(b1.isNegative() && b2.isNegative()) {
 		isNegative = true;	
 	}
 
-	if(BigInt(a) < BigInt(b)) swap(a, b);
+	if(abs(b1) < abs(b2)) swap(a, b);
 
-	res.resize(a.size() + b.size(), 0); // calculate len more precisely
+	std::vector<int> res(a.size() + 1, 0); // calculate len more precisely
 
 	int i = a.size() - 1,
 		j = b.size() - 1,
@@ -142,8 +151,11 @@ inline BigInt operator+(const BigInt& b1, const BigInt& b2) {
 		
     	if(negAddition) {
 			newDigit = a[i] - bDigit - buff;
-			buff = newDigit < 0 ? 1 : 0;
-			newDigit += newDigit < 0 ? 10 : 0;
+			buff = 0;
+			if(newDigit < 0) {
+				newDigit += 10;
+				buff = 1;
+			}
     	}
     	else {
 	    	newDigit = a[i] + bDigit + buff;
@@ -173,91 +185,65 @@ inline BigInt operator-=(BigInt& b1, const BigInt& b2) {
 	return b1;
 }
 
+inline std::vector<int> addVectors(std::vector<int> a, std::vector<int> b) {
+	if(a.size() < b.size()) swap(a, b);
+	std::vector<int> res(a.size() + 1, 0); // calculate len more precisely
+
+	int i = a.size() - 1,
+		j = b.size() - 1,
+		k = res.size() - 1,
+		buff = 0;
+
+    for(; i >= 0; i--, j--) {
+    	int newDigit, bDigit;
+		bDigit = j < 0 ? 0 : b[j];
+
+		newDigit = a[i] + bDigit + buff;
+		buff = newDigit / 10;
+		newDigit %= 10;
+		res[k--] = newDigit;
+    }
+    if(buff) {
+    	res[k--] = buff;	
+    }
+	
+    return res;
+}
 
 inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 	// TODO: Improve efficiency, too slow.
 
 	if(b1 == 0 || b2 == 0) return 0;
 
-	BigInt res = 0;
-	bool isNegative = (b1 < 0 && b2 > 0) || (b1 > 0 && b2 < 0);
+	bool isNegative = b1.isNegative() ^ b2.isNegative();
 	std::vector<int> a = b1.getDigits(),
-					 b = b2.getDigits();
+					 b = b2.getDigits(), 
+					 resVector;
 
-	int len = std::min(a.size(), b.size());
-	int insertTimes = 0;
-
-	if(a.size() < b.size()) swap(a, b);
+	int len = std::max(a.size(), b.size());
+	if(a.size() > b.size()) swap(a, b); // to make less additions 
 
 	for(int i = a.size() - 1; i >= 0 ; i--) {
-		std::vector<int> tempRes(len, 0);
+		std::vector<int> tempResVec(len + 1, 0);
 
-		int k = len - 1;
+		int k = len;	// to not use push_back.
 		int buff = 0;
 		for(int j = b.size() - 1; j >= 0; j--) {
 
 			int newDigit = a[i] * b[j] + buff;
 			buff = newDigit / 10;
 			newDigit %= 10;
-			tempRes[k--] = newDigit;
+			tempResVec[k--] = newDigit;
 		}
-
 		if(buff) {
-			tempRes.insert(tempRes.begin(), buff); 
+			tempResVec[k--] = buff;
 		}
 
-		tempRes.insert(tempRes.end(), insertTimes++, 0);
-		res += BigInt(tempRes);
+		tempResVec.resize(tempResVec.size() + a.size() - i - 1); // concat zeroes;
+		resVector = addVectors(resVector, tempResVec);
 	}
 	
-	return isNegative ? -res : res;
+	BigInt result(resVector);
+	return isNegative ? -result : result;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
