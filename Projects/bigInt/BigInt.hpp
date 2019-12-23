@@ -16,29 +16,29 @@ private:
 	bool isNeg;
 
 	void eraseLeadingZeroes();
+	void checkZeroSign();
 	
-	static std::vector<int> sumAbs(const std::vector<int>& a, const std::vector<int>& b);
-	static std::vector<int> diffAbs(const std::vector<int>& a, const std::vector<int>& b);
-	static BigInt multSmall(const BigInt& b1, long long b2);
-	static std::vector<int> mult(const std::vector<int>& a, const std::vector<int>& b);
+	static std::vector<int> sumAbs(const std::vector<int>&, const std::vector<int>&);
+	static std::vector<int> diffAbs(const std::vector<int>&, const std::vector<int>&);
+	static BigInt multSmall(const BigInt&, long long b2);
+	static std::vector<int> mult(const std::vector<int>&, const std::vector<int>&);
 
-	friend inline BigInt operator+(const BigInt& b1, const BigInt& b2);
-	friend inline BigInt operator*(const BigInt& b1, const BigInt& b2);
-	friend inline bool operator>(const BigInt& b1, const BigInt& b2);
+	friend inline BigInt operator+(const BigInt&, const BigInt&);
+	friend inline BigInt operator*(const BigInt&, const BigInt&);
+	friend inline bool operator>(const BigInt&, const BigInt&);
 
 public:
 	BigInt() : isNeg(false) {
 		mDigits.push_back(0);
 	}
 
-	BigInt(const std::string& s);
-	BigInt(const int64_t n);
-	BigInt(const BigInt& b1);
-	BigInt(const std::vector<int> v);
-	void checkZeroSign();
-
-	BigInt& operator+=(const BigInt& b1);
-	BigInt& operator-=(const BigInt& b1);
+	BigInt(const std::string&);
+	BigInt(const int64_t);
+	BigInt(const BigInt&);
+	BigInt(const std::vector<int>);
+	
+	BigInt& operator+=(const BigInt&);
+	BigInt& operator-=(const BigInt&);
 
 	BigInt& operator++() {
 		*this += 1;
