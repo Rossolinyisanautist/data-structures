@@ -66,6 +66,8 @@ String& String::operator+=(char c) {
 		if(space == 0) {
 			int n = sz + sz + 2;
 			char* p = expand(ptr, n);
+			delete[] ptr;
+			ptr = p;
 			space = n - sz - 2;
 		}
 		else {

@@ -17,7 +17,7 @@ class String {
 
 	void check(int n) const {
 		if(n < 0 || n >= sz) {
-			throw std::out_of_range("String::at(" + std::to_string(n) + ")");
+			throw std::out_of_range("String::at()");
 		}
 	}
 
