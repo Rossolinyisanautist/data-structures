@@ -99,6 +99,18 @@ BigInt& BigInt::operator-=(const BigInt& b2) {
 	return (*this += -b2);
 }
 
+int BigInt::compareAbs(const std::vector<int>& a, const std::vector<int>& b) {
+	if( a.size() < b.size() ) return -1;
+	if( a.size() > b.size() ) return 1;
+
+	for(int i = 0; i < a.size(); i++) {
+		if( a[i] != b[i] ) {
+			return a[i] - b[i];
+		}
+	}
+	return 0;
+}
+
 std::vector<int> BigInt::sumAbs(const std::vector<int>& a, const std::vector<int>& b) {
 	//assume always b1 > b2;
 	int buff = 0;
@@ -126,7 +138,7 @@ std::vector<int> BigInt::sumAbs(const std::vector<int>& a, const std::vector<int
 }
 
 std::vector<int> BigInt::diffAbs(const std::vector<int>& a, const std::vector<int>& b) {
-	//assume always b1 > b2
+
 	int buff = 0;
 
 	std::vector<int> res(a.size() + 1, 0); // calculate len more precisely
@@ -147,7 +159,6 @@ std::vector<int> BigInt::diffAbs(const std::vector<int>& a, const std::vector<in
 
 		res[k--] = newDigit;
     }
-	
 	return (res);
 }
 
@@ -166,7 +177,7 @@ BigInt BigInt::multSmall(const BigInt& b1, long long b2) {
 	return isNegative ? -res : res;	
 }
 
-std::vector<int> BigInt::mult(const std::vector<int>& a, const std::vector<int>& b) {
+std::vector<int> BigInt::multAbs(const std::vector<int>& a, const std::vector<int>& b) {
 	std::vector<int> resVector;
 
 	int len = std::max(a.size(), b.size());
@@ -194,6 +205,55 @@ std::vector<int> BigInt::mult(const std::vector<int>& a, const std::vector<int>&
 	}
 
 	return resVector;
+}
+
+std::pair<std::vector<int>, std::vector<int>> BigInt::divAbs(const std::vector<int>& a, const std::vector<int>& b) {
+	//assume a > b always;
+	int len = a.size() + b.size();
+	std::vector<int> quotient(len),
+					 remainder(len),
+					 temp;
+
+	int idx = 0, countDigits = 0, k = 0;
+
+	while(countDigits <= a.size()) {
+
+		while (compareAbs(temp, b) < 0 && idx < a.size()) {
+				
+			quotient[k++] = 0;
+			temp.emplace_back(a[idx++]);
+			countDigits++;
+
+			if(countDigits > a.size()) {
+				break;
+			}
+		}
+		
+		int newDigit = 0;
+		BigInt multRes = b;
+
+		while( temp[0] == 0 && temp.size() > 1 ) {
+			temp.erase(temp.begin());
+		}
+
+		while( compareAbs( multRes.mDigits, temp) <= 0)  {
+			newDigit++;
+			multRes = newDigit * b;
+		}
+		if(newDigit) newDigit -= 1;
+		multRes -= b;
+
+		quotient[k++] = newDigit;
+		remainder = diffAbs(temp, multRes.mDigits);
+
+		temp = remainder;
+		temp.emplace_back(a[idx++]);
+
+		countDigits++;
+	}
+	quotient.resize(k);
+
+	return make_pair(quotient, remainder);
 }
 
 string BigInt::toString() const {

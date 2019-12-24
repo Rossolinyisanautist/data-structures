@@ -9,11 +9,21 @@ using namespace std;
 
 int main() {
 
-	BigInt a = 1000;
-	BigInt b = -1;
-	BigInt c = a + b;
+	BigInt a = 5000;
+	BigInt b = 10;
+	
+	cout << "Int\n";	
+	int n, m;
+	cin >> n >> m;
+	cout << n % m << '\n';
 
-	cout << a << '\n' << b << '\n' << c << '\n';
+	cout << "BigInt\n";
+	cin >> a >> b;
+	BigInt c = a / b;
+	BigInt d = a % b;
+	// cout << "\n Div = " << c << '\n';
+	// cout << "\n Mod = " << d << '\n';
+	cout << d << '\n';
 	// BigInt a("12341234123412341234123412341234123412341237648791236472137864591230582346597812652930174123956891203645789123719235");
 	// BigInt b(numeric_limits<long long>::min() / 11);
 	// BigInt c(a * b);

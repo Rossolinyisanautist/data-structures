@@ -1,106 +1,111 @@
 #pragma once
 
-#include <cstring>
-#include <iostream>
-#include <stdexcept>
-
+#include<stdexcept>
+#include<iostream>
+#include<cstring>
 
 class String {
-
-public:
-	String(); // default constructor : x{""}
-
-	String(const char* p); // constructor from C-style string: x{"Euler"}
-
-	String(const String&); // copy constructor
-
-	String(String&& x); // move constr uctor
-
- 	~String() { 
- 		if (short_max < sz) {
- 			delete[] ptr; 	
- 		}
- 	} // destructor
-
- 	char& operator[](int n) {
- 		return ptr[n]; 
- 	} // unchecked element access
-
-	char operator[](int n) const { 
-		return ptr[n]; 
-	}
-
-	char& at(int n) {
-		check(n); 
-		return ptr[n]; 
-	} // range-checked element access
-
-	char at(int n) const { 
-		check(n); 
-		return ptr[n]; 
-	}
-
-	char* c_str() { 
-		return ptr; 
-	} // C-style string access
-
-	const char* c_str() const { 
-		return ptr; 
-	}
-
-	int size() const { 
-		return sz; 
-	} // number of elements
-
-	int capacity() const { // elements plus available space 
-		return (sz <= short_max) ? short_max : sz + space; 
-	}
-
-	String& operator+=(char c); // add c at end
-	String& operator=(String&& x); // move assignment
-	String& operator=(const String&);
-
-private:
-
-	static const int short_max = 15;
-	int sz; // number of characters
+	
+	const static int short_max = 15;
+	int sz;
 	char* ptr;
 
 	union {
-		int space; // unused allocated space
-		char ch[short_max + 1]; // leave space for terminating 0
+		int space;
+		char ch[short_max + 1];
 	};
 
-	void check(int n) const { // range check 
-		if (n < 0 || sz <= n) {
-			throw std::out_of_range("String::at()");
+	void check(int n) const {
+		if(n < 0 || n >= sz) {
+			throw std::out_of_range("String::at(" + std::to_string(n) + ")");
 		}
-	} // ancillary member functions:
+	}
 
-	void copy_from(const String& x);
-	void move_from(String& x);
+	void copy_from(const String&);
+	void move_from(String&);
+
+public:
+	String();
+
+	String(const char*);
+
+	String(const String&);
+
+	String(String&&);
+
+	~String() {
+		if(short_max < sz) {
+			delete[] ptr;
+		}
+	}
+
+	char& operator[](int n) {
+		return ptr[n];
+	} 
+
+	char operator[](int n) const {
+		return ptr[n];
+	}
+
+	char& at(int n) {
+		check(n);
+		return ptr[n];
+	}
+
+	char& at(int n) const {
+		check(n);
+		return ptr[n];
+	}
+
+	char* c_str() {
+		return ptr;
+	}
+
+	const char* c_str() const {
+		return ptr;
+	}
+
+	int size() const {
+		return sz;
+	}
+
+	int capacity() const {
+		return sz <= short_max ? short_max : sz + space;
+	}
+
+	String& operator+=(char);
+	String& operator=(const String&);
+	String& operator=(String&&);
 };
 
+std::ostream& operator<<(std::ostream&, const String&);
 
-std::ostream& operator<<(std::ostream& os, const String& s);
+std::istream& operator>>(std::istream&, String&);
 
-std::istream& operator>>(std::istream& is, String& s);
+char* begin(String&);
 
-bool operator==(const String& a, const String& b);
+const char* begin(const String&);
 
-bool operator!=(const String& a, const String& b);
+char* end(String&);
 
-char* begin(String& x);
+const char* end(const String&);
 
-const char* begin(const String& x);
+bool operator==(const String&, const String&);
 
-char* end(String& x);
+bool operator!=(const String&, const String&);
 
-const char* end(const String& x);
+String& operator+=(String&, const String&);
 
-String& operator+=(String& a, const String& b);
+String operator+(const String&, const String&);
 
-String operator+(const String& a, const String& b);
+
+
+
+
+
+
+
+
 
 
 

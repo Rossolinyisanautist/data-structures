@@ -1,3 +1,4 @@
+#pragma once
 
 #include<vector>
 #include<algorithm>
@@ -18,20 +19,24 @@ private:
 	void eraseLeadingZeroes();
 	void checkZeroSign();
 	
+	static int compareAbs(const std::vector<int>&, const std::vector<int>&);
 	static std::vector<int> sumAbs(const std::vector<int>&, const std::vector<int>&);
 	static std::vector<int> diffAbs(const std::vector<int>&, const std::vector<int>&);
 	static BigInt multSmall(const BigInt&, long long b2);
-	static std::vector<int> mult(const std::vector<int>&, const std::vector<int>&);
+	static std::vector<int> multAbs(const std::vector<int>&, const std::vector<int>&);
+	static std::pair<std::vector<int>, std::vector<int>> divAbs(const std::vector<int>&, const std::vector<int>&);
 
 	friend inline BigInt operator+(const BigInt&, const BigInt&);
 	friend inline BigInt operator*(const BigInt&, const BigInt&);
+	friend inline BigInt operator/(const BigInt&, const BigInt&);
+	friend inline BigInt operator%(const BigInt&, const BigInt&);
 	friend inline bool operator>(const BigInt&, const BigInt&);
 
 public:
 	BigInt() : isNeg(false) {
 		mDigits.push_back(0);
 	}
-
+	
 	BigInt(const std::string&);
 	BigInt(const int64_t);
 	BigInt(const BigInt&);
@@ -111,12 +116,12 @@ inline bool operator>(const BigInt& b1, const BigInt& b2) {
 			: a.size() > b.size();
 	} 
 
-	for(int i = 0; i < a.size(); i++) {
-		if( a[i] != b[i] ) {
-			return negativeComparison 
-				? a[i] < b[i] 
-				: a[i] > b[i];
-		}
+	int compareRes = BigInt::compareAbs(a, b);
+	if(compareRes > 0) {
+		return negativeComparison ? false : true;
+	}
+	if(compareRes < 0) {
+		return negativeComparison ? true : false;
 	}
 	return false;
 }
@@ -171,12 +176,66 @@ inline BigInt operator*(const BigInt& b1, const BigInt& b2) {
 	bool isNegative = b1.isNegative() ^ b2.isNegative();
 
 	if(b1.mDigits.size() > b2.mDigits.size()) {
-		res = BigInt(BigInt::mult(b2.mDigits, b1.mDigits));	
+		res = BigInt(BigInt::multAbs(b2.mDigits, b1.mDigits));	
 	}
 	else {
-		res = BigInt(BigInt::mult(b1.mDigits, b2.mDigits));			
+		res = BigInt(BigInt::multAbs(b1.mDigits, b2.mDigits));			
 	}
 
 	res.isNeg = isNegative;
 	return res;
 }
+
+inline BigInt operator/(const BigInt& b1, const BigInt& b2) {
+	if(b2 == 0) {
+		throw runtime_error("Division by zero: " + b1.toString() + " / " + b2.toString());
+	}
+	if(b1 == 0) {
+		return 0;
+	}
+	if(b2 == 1) {
+		return b1;
+	}
+	if(b1 == b2) {
+		return 1;
+	}
+	std::pair<std::vector<int>, std::vector<int>> temp = BigInt::divAbs(b1.mDigits, b2.mDigits);
+	bool isNegative = b1.isNeg ^ b2.isNeg;
+
+	BigInt result = temp.first;
+	result.isNeg = isNegative;
+	return result;
+}
+
+inline BigInt operator%(const BigInt& b1, const BigInt& b2) {
+	std::pair<std::vector<int>, std::vector<int>> temp = BigInt::divAbs(b1.mDigits, b2.mDigits);
+	if(b2 == 0) {
+		throw runtime_error("Division by zero: " + b1.toString() + " / " + b2.toString());
+	}
+	if(b1 == 0) {
+		return 0;
+	}
+	if(b2 == 1) {
+		return 0;
+	}
+	if(b1 == b2) {
+		return 0;
+	}
+	BigInt res = temp.second;
+	res.isNeg = b1.isNeg;
+	return res;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
